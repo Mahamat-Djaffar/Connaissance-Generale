@@ -41,7 +41,12 @@ void showSnackbar(
                 onPressed: () {
                   ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
                 },
-                child: const Text("OK"),
+                child: Text(
+                  "OK",
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: AppColor.white),
+                ),
               );
             },
           ),
