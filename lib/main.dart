@@ -11,6 +11,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+// Youtube
+// - Dannndi Dev
+// Tiktok
+// - @dannndi.dev
+// Instagram
+// - @dannndi.dev
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await MainModule.init();
@@ -44,7 +51,7 @@ class MyApp extends StatelessWidget {
               title: AppUtils.appName,
               theme: AppTheme.light,
               darkTheme: AppTheme.dark,
-              themeMode: context.watch<ThemeCubit>().state.current,
+              themeMode: ThemeMode.light,
               builder: (context, child) {
                 final MediaQueryData data = MediaQuery.of(context);
                 return MediaQuery(
