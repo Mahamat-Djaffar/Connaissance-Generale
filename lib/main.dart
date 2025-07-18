@@ -12,7 +12,7 @@ import 'package:get_it/get_it.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 // Youtube
-// - Dannndi Dev
+// - Dannndi Dev.
 // Tiktok
 // - @dannndi.dev
 // Instagram
