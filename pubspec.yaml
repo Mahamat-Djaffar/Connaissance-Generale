@@ -52,13 +52,13 @@ dependencies:
   # dart ext
   dartz: ^0.10.1
   # loading wrapper
-  skeletonizer: ^1.4.3
+  skeletonizer: ^2.1.0+1
   # svg
   flutter_svg: ^2.2.0
   # image
   extended_image: ^10.0.1
   # internationalization
-  intl: ^0.19.0
+  intl: ^0.20.2
   # state management
   flutter_bloc: ^9.1.1
 
@@ -86,6 +86,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - .env
+    - assets/image/
+    - assets/icon/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
