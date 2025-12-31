@@ -1,9 +1,9 @@
-import 'package:tutorial/core/component/button/design_button.dart';
-import 'package:tutorial/core/component/image/design_assets.dart';
-import 'package:tutorial/core/component/image/design_image.dart';
-import 'package:tutorial/core/component/textfield/design_textfield.dart';
-import 'package:tutorial/core/theme/app_color.dart';
-import 'package:tutorial/core/theme/app_textstyle.dart';
+import 'package:puzzle_app/core/component/button/design_button.dart';
+import 'package:puzzle_app/core/component/image/design_assets.dart';
+import 'package:puzzle_app/core/component/image/design_image.dart';
+import 'package:puzzle_app/core/component/textfield/design_textfield.dart';
+import 'package:puzzle_app/core/theme/app_color.dart';
+import 'package:puzzle_app/core/theme/app_textstyle.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {

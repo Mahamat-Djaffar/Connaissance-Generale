@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:tutorial/core/network/service/network_service_error.dart';
+import 'package:puzzle_app/core/network/service/network_service_error.dart';
 
 class NetworkService {
   final Dio _dio;

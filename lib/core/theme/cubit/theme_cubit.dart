@@ -1,9 +1,9 @@
-import 'package:tutorial/core/localstorage/local_storage.dart';
+import 'package:puzzle_app/core/localstorage/local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:tutorial/core/extensions/string_ext.dart';
+import 'package:puzzle_app/core/extensions/string_ext.dart';
 
 part 'theme_state.dart';
 part 'theme_cubit.freezed.dart';

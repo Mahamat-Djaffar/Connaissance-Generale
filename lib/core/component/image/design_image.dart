@@ -1,5 +1,5 @@
-import 'package:tutorial/core/component/image/design_assets.dart';
-import 'package:tutorial/core/theme/app_color.dart';
+import 'package:puzzle_app/core/component/image/design_assets.dart';
+import 'package:puzzle_app/core/theme/app_color.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+// ignore: depend_on_referenced_packages
 import 'package:logger/logger.dart';
 
 class LoggerInterceptor extends Interceptor {
@@ -25,11 +26,12 @@ class LoggerInterceptor extends Interceptor {
     logger.d({
       'Headers': options.headers,
       'Query Params': options.queryParameters,
-      'Request Body': options.data is FormData
-          ? (options.data as FormData).fields.asMap().map((i, m) {
-              return m;
-            })
-          : options.data,
+      'Request Body':
+          options.data is FormData
+              ? (options.data as FormData).fields.asMap().map((i, m) {
+                return m;
+              })
+              : options.data,
     });
 
     return super.onRequest(options, handler);

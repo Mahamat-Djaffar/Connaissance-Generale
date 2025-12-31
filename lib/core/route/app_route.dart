@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:tutorial/core/route/app_route_name.dart';
-import 'package:tutorial/module/home/presentation/pages/home/home_page.dart';
+import 'package:puzzle_app/core/route/app_route_name.dart';
+import 'package:puzzle_app/module/home/presentation/pages/home/home_page_screen.dart';
+import 'package:puzzle_app/module/home/presentation/pages/home/login_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -21,12 +22,19 @@ class AppRoute {
     initialLocation: "/",
     routes: [
       // default path is to /home
-      GoRoute(path: "/", redirect: (context, state) => "/home"),
+      GoRoute(path: "/", redirect: (context, state) => "/homepage"),
       GoRoute(
-        path: "/home",
+        path: "/homepage",
         name: AppRouteName.home,
         builder: (context, state) {
-          return HomePage();
+          return LoginPage();
+        },
+      ),
+      GoRoute(
+        path: "/homepagescreen",
+        name: AppRouteName.homepagescreen,
+        builder: (context, state) {
+          return HomePageScreen();
         },
       ),
       // GoRoute(

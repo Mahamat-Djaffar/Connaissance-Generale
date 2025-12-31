@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:tutorial/core/network/interceptor/app_interceptor.dart';
-import 'package:tutorial/core/network/logger/logger_interceptor.dart';
+import 'package:puzzle_app/core/network/interceptor/app_interceptor.dart';
+import 'package:puzzle_app/core/network/logger/logger_interceptor.dart';
 import 'package:flutter/foundation.dart';
 
 extension HttpClient on Dio {

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:tutorial/core/constant/network/failure.dart';
-import 'package:tutorial/core/constant/network/network_exception.dart';
+import 'package:puzzle_app/core/constant/network/failure.dart';
+import 'package:puzzle_app/core/constant/network/network_exception.dart';
 import 'package:equatable/equatable.dart';
 
 class NetworkServiceError extends Equatable implements Exception {

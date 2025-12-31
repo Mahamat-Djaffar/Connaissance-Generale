@@ -1,4 +1,4 @@
-import 'package:tutorial/core/localstorage/local_storage.dart';
+import 'package:puzzle_app/core/localstorage/local_storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LocalStorageSecure extends LocalStorage {

@@ -1,4 +1,4 @@
-import 'package:tutorial/core/theme/app_color.dart';
+import 'package:puzzle_app/core/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 class DesignBottomNavbar extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:tutorial/core/constant/network/failure.dart';
-import 'package:tutorial/core/network/response/base_response.dart';
-import 'package:tutorial/core/network/service/network_service_error.dart';
+import 'package:puzzle_app/core/constant/network/failure.dart';
+import 'package:puzzle_app/core/network/response/base_response.dart';
+import 'package:puzzle_app/core/network/service/network_service_error.dart';
 import 'package:flutter/foundation.dart';
 
 Future<Either<Failure, ENTITY>> apiTryCatch<ENTITY>({

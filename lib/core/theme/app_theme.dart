@@ -1,5 +1,5 @@
-import 'package:tutorial/core/theme/app_color.dart';
-import 'package:tutorial/core/theme/app_textstyle.dart';
+import 'package:puzzle_app/core/theme/app_color.dart';
+import 'package:puzzle_app/core/theme/app_textstyle.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {

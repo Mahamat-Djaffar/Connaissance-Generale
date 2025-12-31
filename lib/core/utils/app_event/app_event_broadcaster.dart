@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:tutorial/core/utils/app_event/app_event.dart';
+import 'package:puzzle_app/core/utils/app_event/app_event.dart';
 import 'package:get_it/get_it.dart';
 
 class AppEventBroadcaster {

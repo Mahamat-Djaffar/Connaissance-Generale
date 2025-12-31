@@ -1,4 +1,4 @@
-import 'package:tutorial/core/theme/app_color.dart';
+import 'package:puzzle_app/core/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 enum DesignTextfieldType { outlined, underline, none }
@@ -23,6 +23,7 @@ class DesignTextfield extends StatefulWidget {
     this.obscureText = false,
     this.textAlignVertical,
     this.textInputAction,
+    this.onHideText,
   });
 
   final DesignTextfieldType type;
@@ -42,6 +43,7 @@ class DesignTextfield extends StatefulWidget {
   final bool obscureText;
   final TextAlignVertical? textAlignVertical;
   final TextInputAction? textInputAction;
+  final void Function(bool)? onHideText;
 
   @override
   State<DesignTextfield> createState() => _DesignTextfieldState();
@@ -151,6 +153,7 @@ class _DesignTextfieldState extends State<DesignTextfield> {
                           ? IconButton(
                             onPressed: () {
                               _obscureNotifier.value = !_obscureNotifier.value;
+                              widget.onHideText?.call(_obscureNotifier.value);
                             },
                             icon: Icon(
                               obscure ? Icons.visibility : Icons.visibility_off,

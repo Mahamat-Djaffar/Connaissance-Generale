@@ -1,22 +1,15 @@
-import 'package:tutorial/core/l10n/cubit/language_cubit.dart';
-import 'package:tutorial/core/l10n/generated/app_localizations.dart';
-import 'package:tutorial/core/route/app_route.dart';
-import 'package:tutorial/core/theme/app_color.dart';
-import 'package:tutorial/core/theme/app_theme.dart';
-import 'package:tutorial/core/theme/cubit/theme_cubit.dart';
-import 'package:tutorial/core/utils/app_utils.dart';
-import 'package:tutorial/main_module.dart';
+import 'package:puzzle_app/core/l10n/cubit/language_cubit.dart';
+import 'package:puzzle_app/core/l10n/generated/app_localizations.dart';
+import 'package:puzzle_app/core/route/app_route.dart';
+import 'package:puzzle_app/core/theme/app_color.dart';
+import 'package:puzzle_app/core/theme/app_theme.dart';
+import 'package:puzzle_app/core/theme/cubit/theme_cubit.dart';
+import 'package:puzzle_app/core/utils/app_utils.dart';
+import 'package:puzzle_app/main_module.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-
-// Youtube
-// - Dannndi Dev.
-// Tiktok
-// - @dannndi.dev
-// Instagram
-// - @dannndi.dev
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

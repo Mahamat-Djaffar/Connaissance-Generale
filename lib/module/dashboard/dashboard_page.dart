@@ -1,5 +1,5 @@
-import 'package:tutorial/core/theme/app_color.dart';
-import 'package:tutorial/module/dashboard/widget/design_bottom_navbar.dart';
+import 'package:puzzle_app/core/theme/app_color.dart';
+import 'package:puzzle_app/module/dashboard/widget/design_bottom_navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

@@ -1,4 +1,4 @@
-import 'package:tutorial/core/component/pages/loading_page_wrapper.dart';
+import 'package:puzzle_app/core/component/pages/loading_page_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class SponsorPage extends StatelessWidget {

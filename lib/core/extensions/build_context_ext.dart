@@ -1,4 +1,4 @@
-import 'package:tutorial/core/l10n/generated/app_localizations.dart';
+import 'package:puzzle_app/core/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 extension BuildContextExt on BuildContext {

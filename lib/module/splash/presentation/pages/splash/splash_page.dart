@@ -1,4 +1,4 @@
-import 'package:tutorial/core/route/app_route_name.dart';
+import 'package:puzzle_app/core/route/app_route_name.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
