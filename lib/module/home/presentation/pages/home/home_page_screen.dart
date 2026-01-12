@@ -1,101 +1,6 @@
-// import 'package:flutter/material.dart';
-
-// class HomePageScreen extends StatefulWidget {
-//   const HomePageScreen({super.key});
-
-//   @override
-//   State<HomePageScreen> createState() => _HomePageScreenState();
-// }
-
-// class _HomePageScreenState extends State<HomePageScreen> {
-//   int _selectedIndex = 0;
-
-//   static final List<Widget> _pages = <Widget>[
-//     Center(
-//       child: Container(
-//         height: 150,
-//         width: 150,
-//         decoration: BoxDecoration(
-//           color: Colors.blueAccent,
-//           borderRadius: BorderRadius.circular(56),
-//         ),
-//         child: const Icon(Icons.home, size: 64, color: Colors.white),
-//       ),
-//     ),
-//     Center(
-//       child: Container(
-//         height: 150,
-//         width: 150,
-//         decoration: BoxDecoration(
-//           color: Colors.green,
-//           borderRadius: BorderRadius.circular(56),
-//         ),
-//         child: Icon(Icons.search, size: 64, color: Colors.white),
-//       ),
-//     ),
-//     Center(
-//       child: Container(
-//         height: 150,
-//         width: 150,
-//         decoration: BoxDecoration(
-//           color: Colors.orange,
-//           borderRadius: BorderRadius.circular(56),
-//         ),
-//         child: Icon(Icons.person, size: 64, color: Colors.white),
-//       ),
-//     ),
-//   ];
-
-//   void _onItemTapped(int index) {
-//     setState(() {
-//       _selectedIndex = index;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text(
-//           'Puzzle Game',
-//           style: TextStyle(color: Colors.white),
-//           textAlign: TextAlign.right,
-//           textDirection: TextDirection.ltr,
-//         ),
-//         centerTitle: true,
-//         backgroundColor: Colors.blueAccent,
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.vertical(
-//             bottom: Radius.circular(20),
-//           ),
-//         ),
-//       ),
-//       body: _pages[_selectedIndex],
-//       bottomNavigationBar: BottomNavigationBar(
-//         items: const [
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.home),
-//             label: 'Accueil',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.search),
-//             label: 'Recherche',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.person),
-//             label: 'Profil',
-//           ),
-//         ],
-//         currentIndex: _selectedIndex,
-//         selectedItemColor: Colors.blueAccent,
-//         onTap: _onItemTapped,
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/culture_genrale_screen.dart';
+import 'package:puzzle_app/module/home/presentation/pages/home/sciences/sciences_screen.dart';
 import 'package:puzzle_app/core/theme/app_color.dart';
 
 class HomePageScreen extends StatefulWidget {
@@ -235,7 +140,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
               children: [
                 _buildCategoryCard(
                   'Culture Générale',
-                  '250 questions',
+                  '150 questions',
                   Icons.public,
                   Colors.deepPurple,
                   onPressed: () {
@@ -277,7 +182,14 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   '180 questions',
                   Icons.science_outlined,
                   Colors.blue,
-                  onPressed: () async {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SciencesPage(),
+                      ),
+                    );
+                  },
                 ),
                 _buildCategoryCard(
                   'Histoire',
@@ -550,17 +462,17 @@ class _HomePageScreenState extends State<HomePageScreen> {
       //   ),
       // ),
       child: Container(
-        // width: 100, // 🔹 largeur fixe
-        // height: 120, // 🔹 hauteur fixe
-        // padding: EdgeInsets.all(8), // 🔹 réduit
+        width: 100,
+        height: 120,
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(
-            10,
-          ), // 🔹 coins un peu moins grands
+            15,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.05), // 🔹 ombre plus légère
+              color: Colors.grey.withOpacity(0.05),
               spreadRadius: 1,
               blurRadius: 4,
             ),
@@ -568,10 +480,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min, // 🔹 s'adapte au contenu
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: EdgeInsets.all(8), // 🔹 réduit
+              padding: EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color: color.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
@@ -579,24 +491,24 @@ class _HomePageScreenState extends State<HomePageScreen> {
               child: Icon(
                 icon,
                 color: color,
-                size: 22, // 🔹 plus petit
+                size: 35,
               ),
             ),
-            SizedBox(height: 3), // 🔹 réduit
+            SizedBox(height: 3),
             Text(
               title,
               style: TextStyle(
-                fontSize: 12, // 🔹 plus petit
+                fontSize: 13,
                 fontWeight: FontWeight.bold,
                 color: Colors.grey[800],
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 2), // 🔹 réduit
+            SizedBox(height: 2),
             Text(
               subtitle,
               style: TextStyle(
-                fontSize: 10, // 🔹 plus petit
+                fontSize: 10,
                 color: Colors.grey[600],
               ),
             ),

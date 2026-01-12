@@ -74,6 +74,8 @@ dev_dependencies:
   json_serializable: ^6.9.5
   logger: ^2.6.0
   flutter_launcher_icons: ^0.13.1
+  audioplayers: 6.5.1
+  confetti: ^0.7.0
 
   # For information on the generic Dart part of this file, see the
   # following page: https://dart.dev/tools/pub/pubspec
@@ -99,6 +101,10 @@ flutter:
     - assets/image/puzzle_app.png
     - assets/image/puzzle_app1.png
     - assets/animation/
+    - assets/audio/success_short.mp3
+    - assets/audio/fail_short.mp3
+    - assets/audio/success_final.mp3
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

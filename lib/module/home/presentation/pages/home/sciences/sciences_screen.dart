@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/art_literature/art_literature.dart';
-import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/connaissance_general/connaissance_general.dart';
 import 'package:puzzle_app/core/theme/app_color.dart';
-import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/expression_et_proverbe/expression_proverbe.dart';
-import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/personnalite/personnalite.dart';
-import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/record_chiffre/record_chiffre.dart';
+import 'package:puzzle_app/module/home/presentation/pages/home/sciences/invention_decouverte/invention_decouvert.dart';
+import 'package:puzzle_app/module/home/presentation/pages/home/sciences/informatique/informatique.dart';
+import 'package:puzzle_app/module/home/presentation/pages/home/sciences/physique/physique.dart';
+import 'package:puzzle_app/module/home/presentation/pages/home/sciences/science%20de%20la%20sante/science_sante.dart';
 
-class CultureGeneralePage extends StatefulWidget {
-  const CultureGeneralePage({super.key});
+class SciencesPage extends StatefulWidget {
+  const SciencesPage({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _CultureGeneralePageState createState() => _CultureGeneralePageState();
+  _SciencesPageState createState() => _SciencesPageState();
 }
 
-class _CultureGeneralePageState extends State<CultureGeneralePage> {
-  int selectedLevel = 1;
+class _SciencesPageState extends State<SciencesPage> {
+  int selectedLevel = 1; // 1: Facile, 2: Moyen, 3: Difficile
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,7 @@ class _CultureGeneralePageState extends State<CultureGeneralePage> {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: Text(
-          'Culture Générale',
+          'Sciences',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColor.primarySwatch[500],
@@ -73,9 +72,8 @@ class _CultureGeneralePageState extends State<CultureGeneralePage> {
                     ),
                   ),
                   Text(
-                    'Testez vos cultures générales',
+                    'Testez vos savoirs sur la science',
                     style: TextStyle(
-                      // ignore: deprecated_member_use
                       color: Colors.white.withOpacity(0.9),
                       fontSize: 13,
                     ),
@@ -197,7 +195,6 @@ class _CultureGeneralePageState extends State<CultureGeneralePage> {
               isSelected
                   ? [
                     BoxShadow(
-                      // ignore: deprecated_member_use
                       color: color.withOpacity(0.3),
                       spreadRadius: 1,
                       blurRadius: 8,
@@ -229,65 +226,70 @@ class _CultureGeneralePageState extends State<CultureGeneralePage> {
   List<Widget> _buildThemesList() {
     List<Map<String, dynamic>> themes = [
       {
-        'title': 'Connaissances Générales',
-        'subtitle': 'Un peu de tout',
-        'questions': '30 questions',
-        'icon': Icons.lightbulb_outline,
+        'title': 'Science de la santé',
+        'subtitle': 'La santé humaine, animal et végétale ',
+        'questions': '60 questions',
+        'icon': Icons.health_and_safety,
         'color': Colors.amber,
         'page':
-            () => ConnaissanceGeneralPage(
-              theme: 'Connaissances Générales',
+            () => ScienceSantePage(
+              theme: 'Science de la santé',
               difficulty: selectedLevel,
             ),
       },
       {
-        'title': 'Personnalités Célèbres',
-        'subtitle': 'Acteurs, écrivains, scientifiques',
+        'title': 'Informatique et Technologie',
+        'subtitle': 'scientifiques et tout sur la Tech',
         'questions': '45 questions',
-        'icon': Icons.person_outline,
+        'icon': Icons.laptop_chromebook,
         'color': Colors.pink,
         'page':
-            () => PersonnalitePage(
-              theme: 'Personnalité Célèbres',
+            () => InformatiquePage(
+              theme: 'Informatique et Technologie',
               difficulty: selectedLevel,
             ),
       },
       {
-        'title': 'Art & Littérature',
-        'subtitle': 'Peinture, sculpture, romans',
-        'questions': '25 questions',
-        'icon': Icons.palette_outlined,
+        'title': 'Physque',
+        'subtitle': 'La physique & mecanique',
+        'questions': '40 questions',
+        'icon': Icons.hub,
         'color': Colors.deepOrange,
         'page':
-            () => ArtLiteraturePage(
-              theme: 'Art & Literature',
+            () => PhysiquePage(
+              theme: 'Physique',
               difficulty: selectedLevel,
             ),
       },
       {
-        'title': 'Expressions & Proverbes',
-        'subtitle': 'Dictons et citations',
-        'questions': '30 questions',
-        'icon': Icons.format_quote,
-        'color': Colors.indigo,
+        'title': 'Inventions & Découvertes',
+        'subtitle': 'Les grandes innovations',
+        'questions': '35 questions',
+        'icon': Icons.science_outlined,
+        'color': Colors.cyan,
         'page':
-            () => ExpressionProverbePage(
-              theme: 'Expression & Proverbe',
+            () => InventionDecouvertPage(
+              theme: 'Invention & Decouverte',
               difficulty: selectedLevel,
             ),
       },
-      {
-        'title': 'Records & Chiffres',
-        'subtitle': 'Plus grand, plus petit...',
-        'questions': '25 questions',
-        'icon': Icons.trending_up,
-        'color': Colors.teal,
-        'page':
-            () => RecordChiffrePage(
-              theme: 'Record et Chiffre',
-              difficulty: selectedLevel,
-            ),
-      },
+
+      // {
+      //   'title': 'Expressions & Proverbes',
+      //   'subtitle': 'Dictons et citations',
+      //   'questions': '30 questions',
+      //   'icon': Icons.format_quote,
+      //   'color': Colors.indigo,
+      //   'page': () => print("Pas encore dispo"),
+      // },
+      // {
+      //   'title': 'Records & Chiffres',
+      //   'subtitle': 'Plus grand, plus petit...',
+      //   'questions': '25 questions',
+      //   'icon': Icons.trending_up,
+      //   'color': Colors.teal,
+      //   'page': () => print("Pas encore dispo"),
+      // },
     ];
 
     return themes
@@ -491,7 +493,7 @@ class _CultureGeneralePageState extends State<CultureGeneralePage> {
   }
 
   void _startRecommendedQuiz(String quizTitle) {
-    // print('Démarrage du quiz recommandé: $quizTitle');
+    print('Démarrage du quiz recommandé: $quizTitle');
     // Navigation vers le quiz recommandé
   }
 
@@ -502,7 +504,7 @@ class _CultureGeneralePageState extends State<CultureGeneralePage> {
         return AlertDialog(
           backgroundColor: AppColor.primarySwatch[500],
           title: Text(
-            'Culture Générale',
+            'Sciences',
             style: TextStyle(color: Colors.white),
           ),
           content: Text(

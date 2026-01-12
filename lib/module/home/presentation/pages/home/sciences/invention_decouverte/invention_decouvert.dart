@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_app/core/service/audio.dart';
-import 'package:puzzle_app/module/home/domain/model/cuture_generale_model/connaissance_gen_modele.dart';
-import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/resultat.dart';
+import 'package:puzzle_app/module/home/domain/model/personnalite/personnalite_model.dart';
 
-class ConnaissanceGeneralPage extends StatefulWidget {
+// import 'package:puzzle_app/module/home/domain/model/cuture_generale_model/connaissance_gen_modele.dart';
+
+class InventionDecouvertPage extends StatefulWidget {
   final String theme;
   final int difficulty;
 
-  const ConnaissanceGeneralPage({
+  const InventionDecouvertPage({
     super.key,
     required this.theme,
     required this.difficulty,
   });
 
   @override
-  State<ConnaissanceGeneralPage> createState() =>
-      _ConnaissanceGeneralPageState();
+  State<InventionDecouvertPage> createState() => _InventionDecouvertPageState();
 }
 
-class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
+class _InventionDecouvertPageState extends State<InventionDecouvertPage>
     with TickerProviderStateMixin {
   late List<QuizQuestion> questions;
-  int currentIndex = 0;
+  int currentIndex = 0; // ✅ Corrigé : commence à 0 au lieu de 2
   int score = 0;
   bool answered = false;
   int? selectedAnswer;
@@ -29,28 +28,25 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
   late AnimationController _cardController;
   late Animation<double> _cardAnimation;
 
-  // état local du son (liée à AudioService)
-  bool _soundEnabled = true;
-
   @override
   void initState() {
     super.initState();
-    questions = CultureGeneraleQuestions.getQuestionsByThemeAndDifficulty(
-      widget.theme,
+    questions = PersonnalitesCelebresQuestions.getQuestionsByDifficultyRange(
+      widget.difficulty,
       widget.difficulty,
     );
 
     if (questions.isEmpty) {
-      questions = CultureGeneraleQuestions.getRandomQuestions(10);
+      questions = PersonnalitesCelebresQuestions.getRandomQuestions(10);
     }
 
     _progressController = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 500),
       vsync: this,
     );
 
     _cardController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 300),
       vsync: this,
     );
 
@@ -58,26 +54,14 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
       CurvedAnimation(parent: _cardController, curve: Curves.easeInOut),
     );
 
-    _progressController.value = 0.0;
-
-    // Initialiser le service audio (ne force pas enabled si déjà réglé ailleurs)
-    AudioService().init(enabled: true, preload: false);
-    _soundEnabled = AudioService().isEnabled;
+    _progressController.animateTo((currentIndex + 0) / questions.length);
   }
 
   @override
   void dispose() {
     _progressController.dispose();
     _cardController.dispose();
-    // Ne pas appeler AudioService().dispose() ici si vous l'utilisez globalement ailleurs.
     super.dispose();
-  }
-
-  void _toggleSound() {
-    setState(() {
-      _soundEnabled = !_soundEnabled;
-      AudioService().setEnabled(_soundEnabled);
-    });
   }
 
   void _answerQuestion(int selectedIndex) {
@@ -88,18 +72,9 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
       selectedAnswer = selectedIndex;
       if (selectedIndex == questions[currentIndex].correctAnswerIndex) {
         score++;
-        AudioService()
-            .playSuccessShort(); // son court de succès via AudioService
-      } else {
-        AudioService().playFailShort(); // son court d'échec via AudioService
       }
     });
 
-    final double progress = ((currentIndex + 1) / questions.length).clamp(
-      0.0,
-      1.0,
-    );
-    _progressController.animateTo(progress);
     _cardController.forward().then((_) {
       _cardController.reverse();
     });
@@ -112,16 +87,13 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
         answered = false;
         selectedAnswer = null;
       });
+      _progressController.animateTo((currentIndex + 1) / questions.length);
     } else {
-      _progressController.animateTo(1.0);
       _showResult();
     }
   }
 
   void _showResult() {
-    // Stopper les sons courts via le service avant navigation (sécuritaire)
-    AudioService().stopAll();
-
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -167,11 +139,32 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
     if (questions.isEmpty) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Aucune question disponible'),
+          title: Text('Aucune question disponible'),
           backgroundColor: Colors.deepPurple,
           foregroundColor: Colors.white,
         ),
-        body: const Center(),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.quiz_outlined, size: 64, color: Colors.grey),
+              SizedBox(height: 16),
+              Text(
+                'Aucune question trouvée',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'pour ce thème et niveau de difficulté',
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Retour'),
+              ),
+            ],
+          ),
+        ),
       );
     }
 
@@ -183,32 +176,22 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
       appBar: AppBar(
         title: Text(
           widget.theme,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: difficultyColor,
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
-          // Bouton mute/unmute temporaire pour tester le son
-          IconButton(
-            onPressed: _toggleSound,
-            icon: Icon(
-              _soundEnabled ? Icons.volume_up : Icons.volume_off,
-              color: Colors.white,
-            ),
-            tooltip: _soundEnabled ? 'Désactiver le son' : 'Activer le son',
-          ),
-
           Container(
-            margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            margin: EdgeInsets.only(right: 16, top: 8, bottom: 8),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.2),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               '${currentIndex + 1}/${questions.length}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
@@ -220,7 +203,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
         children: [
           // Header avec progression
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [difficultyColor, difficultyColor.withOpacity(0.8)],
@@ -245,7 +228,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                         ),
                         Text(
                           'Score: $score/${questions.length}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -254,12 +237,12 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.quiz,
                         color: Colors.white,
                         size: 24,
@@ -267,7 +250,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 // Barre de progression
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,14 +262,14 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                         fontSize: 12,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     AnimatedBuilder(
                       animation: _progressController,
                       builder: (context, child) {
                         return LinearProgressIndicator(
                           value: _progressController.value,
                           backgroundColor: Colors.white.withOpacity(0.3),
-                          valueColor: const AlwaysStoppedAnimation<Color>(
+                          valueColor: AlwaysStoppedAnimation<Color>(
                             Colors.white,
                           ),
                           minHeight: 6,
@@ -302,7 +285,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
           // Contenu principal
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -314,7 +297,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                         scale: _cardAnimation.value,
                         child: Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(24),
+                          padding: EdgeInsets.all(24),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
@@ -332,7 +315,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                               Row(
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.all(6),
+                                    padding: EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                       color: difficultyColor.withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(8),
@@ -343,7 +326,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                                       size: 20,
                                     ),
                                   ),
-                                  const SizedBox(width: 12),
+                                  SizedBox(width: 12),
                                   Text(
                                     'Question ${currentIndex + 1}',
                                     style: TextStyle(
@@ -354,7 +337,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 12),
+                              SizedBox(height: 16),
                               Text(
                                 question.question,
                                 style: TextStyle(
@@ -371,7 +354,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                     },
                   ),
 
-                  const SizedBox(height: 16),
+                  SizedBox(height: 24),
 
                   // Options de réponse
                   ...List.generate(
@@ -409,7 +392,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                       }
 
                       return Container(
-                        margin: const EdgeInsets.only(bottom: 12),
+                        margin: EdgeInsets.only(bottom: 12),
                         child: Material(
                           color: backgroundColor,
                           borderRadius: BorderRadius.circular(12),
@@ -417,8 +400,8 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                             borderRadius: BorderRadius.circular(12),
                             onTap: () => _answerQuestion(index),
                             child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              padding: const EdgeInsets.all(16),
+                              duration: Duration(milliseconds: 200),
+                              padding: EdgeInsets.all(16),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
@@ -452,8 +435,10 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                                                 color: Colors.white,
                                               )
                                               : Text(
-                                                String.fromCharCode(65 + index),
-                                                style: const TextStyle(
+                                                String.fromCharCode(
+                                                  65 + index,
+                                                ), // A, B, C, D
+                                                style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 12,
@@ -461,7 +446,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                                               ),
                                     ),
                                   ),
-                                  const SizedBox(width: 16),
+                                  SizedBox(width: 16),
                                   Expanded(
                                     child: Text(
                                       option,
@@ -485,13 +470,13 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                     },
                   ),
 
-                  const SizedBox(height: 14),
+                  SizedBox(height: 24),
 
                   // Explication et bouton suivant
                   if (answered) ...[
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(10),
+                      padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         color: Colors.blue.withOpacity(0.05),
                         borderRadius: BorderRadius.circular(12),
@@ -504,12 +489,12 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                         children: [
                           Row(
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.lightbulb_outline,
                                 color: Colors.blue,
                                 size: 20,
                               ),
-                              const SizedBox(width: 6),
+                              SizedBox(width: 8),
                               Text(
                                 'Explication',
                                 style: TextStyle(
@@ -520,7 +505,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 12),
                           Text(
                             question.explanation,
                             style: TextStyle(
@@ -533,7 +518,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                       ),
                     ),
 
-                    const SizedBox(height: 14),
+                    SizedBox(height: 24),
 
                     SizedBox(
                       width: double.infinity,
@@ -542,7 +527,7 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                         style: ElevatedButton.styleFrom(
                           backgroundColor: difficultyColor,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -555,12 +540,12 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
                               currentIndex < questions.length - 1
                                   ? "Question suivante"
                                   : "Voir les résultats",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             Icon(
                               currentIndex < questions.length - 1
                                   ? Icons.arrow_forward
@@ -578,5 +563,227 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
         ],
       ),
     );
+  }
+}
+
+// Page des résultats
+class QuizResultPage extends StatelessWidget {
+  final int score;
+  final int totalQuestions;
+  final String theme;
+  final int difficulty;
+
+  const QuizResultPage({
+    Key? key,
+    required this.score,
+    required this.totalQuestions,
+    required this.theme,
+    required this.difficulty,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double percentage = (score / totalQuestions) * 100;
+    String grade = _getGrade(percentage);
+    Color gradeColor = _getGradeColor(percentage);
+
+    return Scaffold(
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        title: Text('Résultats'),
+        backgroundColor: gradeColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Icône de résultat
+                  Container(
+                    padding: EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: gradeColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Icon(
+                      _getResultIcon(percentage),
+                      size: 64,
+                      color: gradeColor,
+                    ),
+                  ),
+
+                  SizedBox(height: 24),
+
+                  Text(
+                    grade,
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: gradeColor,
+                    ),
+                  ),
+
+                  SizedBox(height: 16),
+
+                  Text(
+                    '$score/$totalQuestions',
+                    style: TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[800],
+                    ),
+                  ),
+
+                  Text(
+                    '${percentage.toStringAsFixed(1)}% de réussite',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+
+                  SizedBox(height: 32),
+
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 10,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          theme,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          _getDifficultyText(difficulty),
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Boutons d'action
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      side: BorderSide(color: gradeColor),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Retour',
+                      style: TextStyle(
+                        color: gradeColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => InventionDecouvertPage(
+                                theme: theme,
+                                difficulty: difficulty,
+                              ),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: gradeColor,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Rejouer',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getGrade(double percentage) {
+    if (percentage >= 90) return 'Excellent !';
+    if (percentage >= 80) return 'Très bien !';
+    if (percentage >= 70) return 'Bien !';
+    if (percentage >= 60) return 'Assez bien';
+    if (percentage >= 50) return 'Passable';
+    return 'À améliorer';
+  }
+
+  Color _getGradeColor(double percentage) {
+    if (percentage >= 80) return Colors.green;
+    if (percentage >= 60) return Colors.orange;
+    return Colors.red;
+  }
+
+  IconData _getResultIcon(double percentage) {
+    if (percentage >= 90) return Icons.emoji_events;
+    if (percentage >= 80) return Icons.thumb_up;
+    if (percentage >= 60) return Icons.sentiment_satisfied;
+    return Icons.sentiment_dissatisfied;
+  }
+
+  String _getDifficultyText(int difficulty) {
+    switch (difficulty) {
+      case 1:
+        return 'Niveau Facile ⭐';
+      case 2:
+        return 'Niveau Moyen ⭐⭐';
+      case 3:
+        return 'Niveau Difficile ⭐⭐⭐';
+      default:
+        return 'Niveau $difficulty';
+    }
   }
 }

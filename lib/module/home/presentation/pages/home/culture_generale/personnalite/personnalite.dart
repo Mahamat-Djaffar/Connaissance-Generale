@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:puzzle_app/core/service/audio.dart';
 import 'package:puzzle_app/module/home/domain/model/personnalite/personnalite_model.dart';
+import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/resultat.dart';
 
 // import 'package:puzzle_app/module/home/domain/model/cuture_generale_model/connaissance_gen_modele.dart';
 
@@ -28,6 +30,8 @@ class _PersonnalitePageState extends State<PersonnalitePage>
   late AnimationController _cardController;
   late Animation<double> _cardAnimation;
 
+  bool _soundEnabled = true;
+
   @override
   void initState() {
     super.initState();
@@ -54,7 +58,11 @@ class _PersonnalitePageState extends State<PersonnalitePage>
       CurvedAnimation(parent: _cardController, curve: Curves.easeInOut),
     );
 
-    _progressController.animateTo((currentIndex + 0) / questions.length);
+    _progressController.value = 0.0;
+    // _progressController.animateTo((currentIndex + 0) / questions.length);
+
+    AudioService().init(enabled: true, preload: false);
+    _soundEnabled = AudioService().isEnabled;
   }
 
   @override
@@ -62,6 +70,13 @@ class _PersonnalitePageState extends State<PersonnalitePage>
     _progressController.dispose();
     _cardController.dispose();
     super.dispose();
+  }
+
+  void _toggleSound() {
+    setState(() {
+      _soundEnabled = !_soundEnabled;
+      AudioService().setEnabled(_soundEnabled);
+    });
   }
 
   void _answerQuestion(int selectedIndex) {
@@ -72,9 +87,17 @@ class _PersonnalitePageState extends State<PersonnalitePage>
       selectedAnswer = selectedIndex;
       if (selectedIndex == questions[currentIndex].correctAnswerIndex) {
         score++;
+        AudioService()
+            .playSuccessShort(); // son court de succès via AudioService
+      } else {
+        AudioService().playFailShort(); // son court d'échec via AudioService
       }
     });
-
+    final double progress = ((currentIndex + 1) / questions.length).clamp(
+      0.0,
+      1.0,
+    );
+    _progressController.animateTo(progress);
     _cardController.forward().then((_) {
       _cardController.reverse();
     });
@@ -87,13 +110,15 @@ class _PersonnalitePageState extends State<PersonnalitePage>
         answered = false;
         selectedAnswer = null;
       });
-      _progressController.animateTo((currentIndex + 1) / questions.length);
+      // _progressController.animateTo((currentIndex + 1) / questions.length);
     } else {
+      _progressController.animateTo(1.0);
       _showResult();
     }
   }
 
   void _showResult() {
+    AudioService().stopAll();
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -182,6 +207,14 @@ class _PersonnalitePageState extends State<PersonnalitePage>
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
+          IconButton(
+            onPressed: _toggleSound,
+            icon: Icon(
+              _soundEnabled ? Icons.volume_up : Icons.volume_off,
+              color: Colors.white,
+            ),
+            tooltip: _soundEnabled ? 'Désactiver le son' : 'Activer le son',
+          ),
           Container(
             margin: EdgeInsets.only(right: 16, top: 8, bottom: 8),
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -405,7 +438,7 @@ class _PersonnalitePageState extends State<PersonnalitePage>
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: borderColor!,
+                                  color: borderColor,
                                   width:
                                       answered && (isCorrect || isSelected)
                                           ? 2
@@ -563,227 +596,5 @@ class _PersonnalitePageState extends State<PersonnalitePage>
         ],
       ),
     );
-  }
-}
-
-// Page des résultats
-class QuizResultPage extends StatelessWidget {
-  final int score;
-  final int totalQuestions;
-  final String theme;
-  final int difficulty;
-
-  const QuizResultPage({
-    Key? key,
-    required this.score,
-    required this.totalQuestions,
-    required this.theme,
-    required this.difficulty,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    double percentage = (score / totalQuestions) * 100;
-    String grade = _getGrade(percentage);
-    Color gradeColor = _getGradeColor(percentage);
-
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        title: Text('Résultats'),
-        backgroundColor: gradeColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Icône de résultat
-                  Container(
-                    padding: EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: gradeColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Icon(
-                      _getResultIcon(percentage),
-                      size: 64,
-                      color: gradeColor,
-                    ),
-                  ),
-
-                  SizedBox(height: 24),
-
-                  Text(
-                    grade,
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: gradeColor,
-                    ),
-                  ),
-
-                  SizedBox(height: 16),
-
-                  Text(
-                    '$score/$totalQuestions',
-                    style: TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-
-                  Text(
-                    '${percentage.toStringAsFixed(1)}% de réussite',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-
-                  SizedBox(height: 32),
-
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: 1,
-                          blurRadius: 10,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          theme,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          _getDifficultyText(difficulty),
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Boutons d'action
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                    style: OutlinedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      side: BorderSide(color: gradeColor),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      'Retour',
-                      style: TextStyle(
-                        color: gradeColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => PersonnalitePage(
-                                theme: theme,
-                                difficulty: difficulty,
-                              ),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: gradeColor,
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      'Rejouer',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _getGrade(double percentage) {
-    if (percentage >= 90) return 'Excellent !';
-    if (percentage >= 80) return 'Très bien !';
-    if (percentage >= 70) return 'Bien !';
-    if (percentage >= 60) return 'Assez bien';
-    if (percentage >= 50) return 'Passable';
-    return 'À améliorer';
-  }
-
-  Color _getGradeColor(double percentage) {
-    if (percentage >= 80) return Colors.green;
-    if (percentage >= 60) return Colors.orange;
-    return Colors.red;
-  }
-
-  IconData _getResultIcon(double percentage) {
-    if (percentage >= 90) return Icons.emoji_events;
-    if (percentage >= 80) return Icons.thumb_up;
-    if (percentage >= 60) return Icons.sentiment_satisfied;
-    return Icons.sentiment_dissatisfied;
-  }
-
-  String _getDifficultyText(int difficulty) {
-    switch (difficulty) {
-      case 1:
-        return 'Niveau Facile ⭐';
-      case 2:
-        return 'Niveau Moyen ⭐⭐';
-      case 3:
-        return 'Niveau Difficile ⭐⭐⭐';
-      default:
-        return 'Niveau $difficulty';
-    }
   }
 }
