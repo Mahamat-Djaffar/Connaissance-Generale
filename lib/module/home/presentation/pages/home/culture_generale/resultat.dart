@@ -2,9 +2,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/connaissance_general/connaissance_general.dart';
-
-// Remplacez l'import ci-dessous par le chemin réel de votre page quiz si nécessaire
 
 class QuizResultPage extends StatefulWidget {
   final int score;
@@ -12,12 +9,17 @@ class QuizResultPage extends StatefulWidget {
   final String theme;
   final int difficulty;
 
+  /// Nouveau : builder utilisé pour relancer le quiz (fournir une nouvelle page).
+  /// Ex: (context) => ConnaissanceGeneralPage(theme: theme, difficulty: difficulty)
+  final WidgetBuilder replayBuilder;
+
   const QuizResultPage({
     Key? key,
     required this.score,
     required this.totalQuestions,
     required this.theme,
     required this.difficulty,
+    required this.replayBuilder,
   }) : super(key: key);
 
   @override
@@ -36,7 +38,6 @@ class _QuizResultPageState extends State<QuizResultPage> {
     );
     _finalAudioPlayer = AudioPlayer();
 
-    // Si score parfait, lancer confettis + musique finale
     if (widget.score == widget.totalQuestions && widget.totalQuestions > 0) {
       _confettiController.play();
       _playFinalSuccess();
@@ -61,12 +62,12 @@ class _QuizResultPageState extends State<QuizResultPage> {
 
   @override
   Widget build(BuildContext context) {
-    double percentage =
+    final double percentage =
         (widget.totalQuestions == 0)
             ? 0.0
             : (widget.score / widget.totalQuestions) * 100;
-    String grade = _getGrade(percentage);
-    Color gradeColor = _getGradeColor(percentage);
+    final String grade = _getGrade(percentage);
+    final Color gradeColor = _getGradeColor(percentage);
     final bool isPerfect =
         widget.score == widget.totalQuestions && widget.totalQuestions > 0;
 
@@ -77,6 +78,7 @@ class _QuizResultPageState extends State<QuizResultPage> {
         backgroundColor: gradeColor,
         foregroundColor: Colors.white,
         elevation: 0,
+        automaticallyImplyLeading: false,
       ),
       body: Stack(
         children: [
@@ -88,7 +90,6 @@ class _QuizResultPageState extends State<QuizResultPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Icône de résultat
                       Container(
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
@@ -101,9 +102,7 @@ class _QuizResultPageState extends State<QuizResultPage> {
                           color: gradeColor,
                         ),
                       ),
-
                       const SizedBox(height: 24),
-
                       Text(
                         grade,
                         style: TextStyle(
@@ -112,9 +111,7 @@ class _QuizResultPageState extends State<QuizResultPage> {
                           color: gradeColor,
                         ),
                       ),
-
                       const SizedBox(height: 16),
-
                       Text(
                         '${widget.score}/${widget.totalQuestions}',
                         style: TextStyle(
@@ -123,7 +120,6 @@ class _QuizResultPageState extends State<QuizResultPage> {
                           color: Colors.grey[800],
                         ),
                       ),
-
                       Text(
                         '${percentage.toStringAsFixed(1)}% de réussite',
                         style: const TextStyle(
@@ -131,9 +127,7 @@ class _QuizResultPageState extends State<QuizResultPage> {
                           color: Colors.grey,
                         ),
                       ),
-
                       const SizedBox(height: 32),
-
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -171,13 +165,13 @@ class _QuizResultPageState extends State<QuizResultPage> {
                   ),
                 ),
 
-                // Boutons d'action
+                // Boutons
                 Row(
                   children: [
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          // revenir en arrière d'une façon générique :
                           Navigator.pop(context);
                         },
                         style: OutlinedButton.styleFrom(
@@ -201,15 +195,13 @@ class _QuizResultPageState extends State<QuizResultPage> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
+                          // arrêter confettis/son puis pousser la page fournie par replayBuilder
+                          if (isPerfect) _confettiController.stop();
+                          _finalAudioPlayer.stop();
+
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => ConnaissanceGeneralPage(
-                                    theme: widget.theme,
-                                    difficulty: widget.difficulty,
-                                  ),
-                            ),
+                            MaterialPageRoute(builder: widget.replayBuilder),
                           );
                         },
                         style: ElevatedButton.styleFrom(
@@ -235,7 +227,6 @@ class _QuizResultPageState extends State<QuizResultPage> {
             ),
           ),
 
-          // Confettis : n'afficher que si score parfait
           if (isPerfect) ...[
             Align(
               alignment: Alignment.topCenter,
@@ -256,8 +247,6 @@ class _QuizResultPageState extends State<QuizResultPage> {
                   Colors.purple,
                   Colors.yellow,
                 ],
-                // augmenter la taille des particules si vous le souhaitez
-                // particleDrag: 0.05,
               ),
             ),
             Align(

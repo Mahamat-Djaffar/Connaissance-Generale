@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:puzzle_app/core/service/audio.dart';
-import 'package:puzzle_app/module/home/domain/model/cuture_generale_model/connaissance_gen_modele.dart';
+import 'package:puzzle_app/module/home/domain/model/cuture_generale/art_litterature_model/art_litterature_model.dart';
+
 import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/resultat.dart';
 // import 'package:puzzle_app/module/home/domain/model/cuture_generale_model/connaissance_gen_modele.dart';
 
-class ArtLiteraturePage extends StatefulWidget {
+class ArtLitteraturePage extends StatefulWidget {
   final String theme;
   final int difficulty;
 
-  const ArtLiteraturePage({
+  const ArtLitteraturePage({
     super.key,
     required this.theme,
     required this.difficulty,
   });
 
   @override
-  State<ArtLiteraturePage> createState() => _ArtLiteraturePageState();
+  State<ArtLitteraturePage> createState() => _ArtLitteraturePageState();
 }
 
-class _ArtLiteraturePageState extends State<ArtLiteraturePage>
+class _ArtLitteraturePageState extends State<ArtLitteraturePage>
     with TickerProviderStateMixin {
   late List<QuizQuestion> questions;
   int currentIndex = 0;
@@ -34,13 +35,13 @@ class _ArtLiteraturePageState extends State<ArtLiteraturePage>
   @override
   void initState() {
     super.initState();
-    questions = CultureGeneraleQuestions.getQuestionsByThemeAndDifficulty(
+    questions = ArtLitteratureQuestions.getQuestionsByThemeAndDifficulty(
       widget.theme,
       widget.difficulty,
     );
 
     if (questions.isEmpty) {
-      questions = CultureGeneraleQuestions.getRandomQuestions(10);
+      questions = ArtLitteratureQuestions.getRandomQuestions(10);
     }
 
     _progressController = AnimationController(
@@ -117,7 +118,7 @@ class _ArtLiteraturePageState extends State<ArtLiteraturePage>
 
   void _showResult() {
     AudioService().stopAll();
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder:
@@ -126,6 +127,11 @@ class _ArtLiteraturePageState extends State<ArtLiteraturePage>
               totalQuestions: questions.length,
               theme: widget.theme,
               difficulty: widget.difficulty,
+              replayBuilder:
+                  (ctx) => ArtLitteraturePage(
+                    theme: widget.theme,
+                    difficulty: widget.difficulty,
+                  ),
             ),
       ),
     );
@@ -575,5 +581,3 @@ class _ArtLiteraturePageState extends State<ArtLiteraturePage>
     );
   }
 }
-
-// Page des résultats

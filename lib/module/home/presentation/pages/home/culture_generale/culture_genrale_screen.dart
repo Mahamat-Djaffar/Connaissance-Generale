@@ -241,6 +241,18 @@ class _CultureGeneralePageState extends State<CultureGeneralePage> {
             ),
       },
       {
+        'title': 'Expressions & Proverbes',
+        'subtitle': 'Dictons et citations',
+        'questions': '30 questions',
+        'icon': Icons.format_quote,
+        'color': Colors.indigo,
+        'page':
+            () => ExpressionProverbePage(
+              theme: 'Expressions & Proverbes',
+              difficulty: selectedLevel,
+            ),
+      },
+      {
         'title': 'Personnalités Célèbres',
         'subtitle': 'Acteurs, écrivains, scientifiques',
         'questions': '45 questions',
@@ -259,23 +271,12 @@ class _CultureGeneralePageState extends State<CultureGeneralePage> {
         'icon': Icons.palette_outlined,
         'color': Colors.deepOrange,
         'page':
-            () => ArtLiteraturePage(
-              theme: 'Art & Literature',
+            () => ArtLitteraturePage(
+              theme: 'Art & Littérature',
               difficulty: selectedLevel,
             ),
       },
-      {
-        'title': 'Expressions & Proverbes',
-        'subtitle': 'Dictons et citations',
-        'questions': '30 questions',
-        'icon': Icons.format_quote,
-        'color': Colors.indigo,
-        'page':
-            () => ExpressionProverbePage(
-              theme: 'Expression & Proverbe',
-              difficulty: selectedLevel,
-            ),
-      },
+
       {
         'title': 'Records & Chiffres',
         'subtitle': 'Plus grand, plus petit...',

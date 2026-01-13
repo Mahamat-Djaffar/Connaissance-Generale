@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:puzzle_app/core/service/audio.dart';
-import 'package:puzzle_app/module/home/domain/model/cuture_generale_model/connaissance_gen_modele.dart';
+import 'package:puzzle_app/module/home/domain/model/cuture_generale/connaissance_generale_model/connaissance_gen_modele.dart';
 import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/resultat.dart';
 // import 'package:puzzle_app/module/home/domain/model/cuture_generale_model/connaissance_gen_modele.dart';
 
@@ -117,7 +117,7 @@ class _RecordChiffrePageState extends State<RecordChiffrePage>
 
   void _showResult() {
     AudioService().stopAll();
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder:
@@ -126,6 +126,11 @@ class _RecordChiffrePageState extends State<RecordChiffrePage>
               totalQuestions: questions.length,
               theme: widget.theme,
               difficulty: widget.difficulty,
+              replayBuilder:
+                  (ctx) => RecordChiffrePage(
+                    theme: widget.theme,
+                    difficulty: widget.difficulty,
+                  ),
             ),
       ),
     );

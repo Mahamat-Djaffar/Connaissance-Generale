@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_app/module/home/domain/model/cuture_generale_model/connaissance_gen_modele.dart';
+import 'package:puzzle_app/module/home/domain/model/cuture_generale/connaissance_generale_model/connaissance_gen_modele.dart';
 // import 'package:puzzle_app/module/home/domain/model/cuture_generale_model/connaissance_gen_modele.dart';
 
 class ScienceSantePage extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_app/module/home/domain/model/personnalite/personnalite_model.dart';
+import 'package:puzzle_app/module/home/domain/model/cuture_generale/personnalite/personnalite_model.dart';
 
 // import 'package:puzzle_app/module/home/domain/model/cuture_generale_model/connaissance_gen_modele.dart';
 
