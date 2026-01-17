@@ -6,7 +6,7 @@ class QuizQuestion {
   final int correctAnswerIndex;
   final String explanation;
   final String category;
-  final int difficulty; // 1: Facile, 2: Moyen, 3: Difficile
+  final int difficulty;
   final String theme;
 
   QuizQuestion({
@@ -200,11 +200,11 @@ class ExpressionsProverbesQuestions {
             'Que signifie le proverbe africain "Un seul doigt ne peut pas attraper un pou" ?',
         options: [
           'On peut attraper un pou seul',
-          'La solidarité permet de résoudre les problèmes',
           'Les doigts sont inutiles',
           'Il faut avoir des outils',
+          'La solidarité permet de résoudre les problèmes',
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 3,
         explanation:
             'Le proverbe insiste sur l\'importance de la coopération et de la solidarité.',
         category: 'Expressions & Proverbes',
@@ -252,32 +252,14 @@ class ExpressionsProverbesQuestions {
         id: 'ep_014',
         question: 'Que veut dire "faire d\'une pierre deux coups" ?',
         options: [
-          'Lancer une pierre',
           'Obtenir deux résultats avec une seule action',
+          'Lancer une pierre',
           'Casser deux objets',
           'Se blesser en aidant',
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 0,
         explanation:
             'Réussir à atteindre deux objectifs avec une seule action ou effort.',
-        category: 'Expressions & Proverbes',
-        difficulty: 2,
-        theme: 'Expressions & Proverbes',
-      ),
-
-      QuizQuestion(
-        id: 'ep_015',
-        question:
-            'Dans le proverbe wolof sénégalais "Nit nitay garabam" (litt. l\'homme est la cure de l\'homme), quel sens se dégage principalement ?',
-        options: [
-          'Les remèdes sont meilleurs que les hommes',
-          'Les hommes se guérissent mutuellement par la solidarité et le soutien',
-          'Les hommes sont ennemis',
-          'Les hommes sont médecins',
-        ],
-        correctAnswerIndex: 1,
-        explanation:
-            'Le proverbe souligne l\'entraide et le soutien humain comme source de guérison et d\'équilibre social.',
         category: 'Expressions & Proverbes',
         difficulty: 2,
         theme: 'Expressions & Proverbes',
@@ -288,11 +270,11 @@ class ExpressionsProverbesQuestions {
         question: 'Que signifie "prendre le taureau par les cornes" ?',
         options: [
           'Fuir',
-          'Affronter directement une difficulté',
           'Soigner un animal',
+          'Affronter directement une difficulté',
           'Reporter un problème',
         ],
-        correctAnswerIndex: 1,
+        correctAnswerIndex: 2,
         explanation:
             'Affronter un problème ou une situation difficile avec détermination et sans détour.',
         category: 'Expressions & Proverbes',
@@ -316,25 +298,6 @@ class ExpressionsProverbesQuestions {
         difficulty: 2,
         theme: 'Expressions & Proverbes',
       ),
-
-      QuizQuestion(
-        id: 'ep_018',
-        question:
-            'Que signifie le proverbe swahili "Mti hauanguki kwa mbali bila sababu" (l\'arbre ne tombe pas sans raison) ?',
-        options: [
-          'Les arbres sont immortels',
-          'Il y a toujours une cause à un événement',
-          'Les vents sont toujours coupables',
-          'La nature est aléatoire',
-        ],
-        correctAnswerIndex: 1,
-        explanation:
-            'Ce proverbe veut dire qu\'un événement a presque toujours une cause ou une explication sous-jacente.',
-        category: 'Expressions & Proverbes',
-        difficulty: 2,
-        theme: 'Expressions & Proverbes',
-      ),
-
       QuizQuestion(
         id: 'ep_019',
         question: 'Que signifie "ramener sa fraise" (familier) ?',
@@ -478,24 +441,6 @@ class ExpressionsProverbesQuestions {
       ),
 
       QuizQuestion(
-        id: 'ep_027',
-        question:
-            'Que veut dire le proverbe haoussa "Komai nisan dare ga gari" (litt. "tout dépend de la proximité de la ville") dans un sens métaphorique ?',
-        options: [
-          'La distance physique ne compte pas',
-          'Les opportunités et perceptions changent selon le contexte et la proximité des centres de pouvoir/économie',
-          'Il ne faut pas voyager la nuit',
-          'La ville est dangereuse',
-        ],
-        correctAnswerIndex: 1,
-        explanation:
-            'Le proverbe souligne que les opportunités ou comportements varient selon la proximité des centres économiques ou sociaux.',
-        category: 'Expressions & Proverbes',
-        difficulty: 3,
-        theme: 'Expressions & Proverbes',
-      ),
-
-      QuizQuestion(
         id: 'ep_028',
         question: 'Quel sens donne-t-on à l\'expression "sauver les meubles" ?',
         options: [
@@ -507,24 +452,6 @@ class ExpressionsProverbesQuestions {
         correctAnswerIndex: 1,
         explanation:
             'Sauver les meubles signifie préserver ce qui reste de précieux lorsqu\'une situation tourne mal.',
-        category: 'Expressions & Proverbes',
-        difficulty: 3,
-        theme: 'Expressions & Proverbes',
-      ),
-
-      QuizQuestion(
-        id: 'ep_029',
-        question:
-            'Le proverbe peul "Njaari woni, boni hakkunde" (litt. "Le cœur a ses raisons") rapproche-t-il plutôt l\'idée de :',
-        options: [
-          'Raisons logiques',
-          'Affections et émotions qui échappent à la logique',
-          'La faim',
-          'La justice',
-        ],
-        correctAnswerIndex: 1,
-        explanation:
-            'Ce proverbe met en évidence que les émotions et les affections peuvent guider des choix indépendamment de la raison froide.',
         category: 'Expressions & Proverbes',
         difficulty: 3,
         theme: 'Expressions & Proverbes',

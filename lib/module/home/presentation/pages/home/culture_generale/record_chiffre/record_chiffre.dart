@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:puzzle_app/core/service/audio.dart';
-import 'package:puzzle_app/module/home/domain/model/cuture_generale/connaissance_generale_model/connaissance_gen_modele.dart';
+import 'package:puzzle_app/module/home/domain/model/cuture_generale/record_chiffre/chiffre_model.dart';
 import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/resultat.dart';
 // import 'package:puzzle_app/module/home/domain/model/cuture_generale_model/connaissance_gen_modele.dart';
 
@@ -34,13 +34,13 @@ class _RecordChiffrePageState extends State<RecordChiffrePage>
   @override
   void initState() {
     super.initState();
-    questions = CultureGeneraleQuestions.getQuestionsByThemeAndDifficulty(
+    questions = ChiffresRecordsQuestions.getQuestionsByThemeAndDifficulty(
       widget.theme,
       widget.difficulty,
     );
 
     if (questions.isEmpty) {
-      questions = CultureGeneraleQuestions.getRandomQuestions(10);
+      questions = ChiffresRecordsQuestions.getRandomQuestions(10);
     }
 
     _progressController = AnimationController(

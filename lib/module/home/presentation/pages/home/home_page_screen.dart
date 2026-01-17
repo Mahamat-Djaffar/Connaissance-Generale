@@ -65,13 +65,14 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Bonjour ! 👋',
+                    'Bonjour !',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+
                   SizedBox(height: 2),
                   Text(
                     'Prêt pour un nouveau défi ?',
@@ -117,9 +118,8 @@ class _HomePageScreenState extends State<HomePageScreen> {
               ],
             ),
 
-            SizedBox(height: 22),
+            SizedBox(height: 16),
 
-            // Catégories populaires
             Text(
               'Catégories populaires',
               style: TextStyle(
@@ -134,15 +134,15 @@ class _HomePageScreenState extends State<HomePageScreen> {
               crossAxisCount: 2,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
-              childAspectRatio: 1.0,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 10,
+              childAspectRatio: 1.2,
               children: [
                 _buildCategoryCard(
                   'Culture Générale',
                   '150 questions',
                   Icons.public,
-                  Colors.deepPurple,
+                  Colors.blueGrey,
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -151,31 +151,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       ),
                     );
                   },
-                  // () => onCLickLogin();
-                  //     context.go('/homepagescreen');(
-                  //   context,
-                  //   PageRouteBuilder(
-                  //     pageBuilder:
-                  //         (context, animation, secondaryAnimation) =>
-                  //             CultureGeneralePage(),
-                  //     transitionsBuilder: (
-                  //       context,
-                  //       animation,
-                  //       secondaryAnimation,
-                  //       child,
-                  //     ) {
-                  //       return SlideTransition(
-                  //         position: animation.drive(
-                  //           Tween(
-                  //             begin: Offset(1.0, 0.0),
-                  //             end: Offset.zero,
-                  //           ).chain(CurveTween(curve: Curves.ease)),
-                  //         ),
-                  //         child: child,
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
                 ),
                 _buildCategoryCard(
                   'Sciences',
@@ -195,14 +170,14 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   'Histoire',
                   '200 questions',
                   Icons.history_edu_outlined,
-                  Colors.brown,
+                  Colors.pink,
                   onPressed: () async {},
                 ),
                 _buildCategoryCard(
                   'Géographie',
                   '160 questions',
-                  Icons.language_outlined,
-                  Colors.green,
+                  Icons.language_rounded,
+                  Colors.brown,
                   onPressed: () async {},
                 ),
                 _buildCategoryCard(
@@ -216,7 +191,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   'Divertissement',
                   '300 questions',
                   Icons.movie_outlined,
-                  Colors.pink,
+                  Colors.cyan,
                   onPressed: () async {},
                 ),
               ],

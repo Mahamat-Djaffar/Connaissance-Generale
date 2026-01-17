@@ -280,7 +280,7 @@ class _CultureGeneralePageState extends State<CultureGeneralePage> {
       {
         'title': 'Records & Chiffres',
         'subtitle': 'Plus grand, plus petit...',
-        'questions': '25 questions',
+        'questions': '30 questions',
         'icon': Icons.trending_up,
         'color': Colors.teal,
         'page':
