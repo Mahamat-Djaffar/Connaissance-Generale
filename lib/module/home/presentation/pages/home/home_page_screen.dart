@@ -199,7 +199,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
             SizedBox(height: 10),
 
-            // Quiz du jour
             Text(
               'Quiz du jour',
               style: TextStyle(
