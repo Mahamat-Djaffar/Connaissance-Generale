@@ -397,7 +397,7 @@ class _QuizJourPageState extends State<QuizJourPage>
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: borderColor!,
+                                  color: borderColor,
                                   width:
                                       answered && (isCorrect || isSelected)
                                           ? 2
