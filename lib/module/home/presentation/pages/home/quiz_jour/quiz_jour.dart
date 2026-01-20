@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_app/core/service/audio.dart';
-import 'package:puzzle_app/module/home/domain/model/science/physique/physique_meca.dart';
-import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/resultat.dart';
+import 'package:puzzle_app/module/home/domain/model/cuture_generale/connaissance_generale_model/connaissance_gen_modele.dart';
 // import 'package:puzzle_app/module/home/domain/model/cuture_generale_model/connaissance_gen_modele.dart';
 
-class PhysiquePage extends StatefulWidget {
-  final String theme;
-  final int difficulty;
-
-  const PhysiquePage({
-    super.key,
-    required this.theme,
-    required this.difficulty,
-  });
+class QuizJourPage extends StatefulWidget {
+  const QuizJourPage({super.key});
 
   @override
-  State<PhysiquePage> createState() => _PhysiquePageState();
+  State<QuizJourPage> createState() => _QuizJourPageState();
 }
 
-class _PhysiquePageState extends State<PhysiquePage>
+class _QuizJourPageState extends State<QuizJourPage>
     with TickerProviderStateMixin {
   late List<QuizQuestion> questions;
   int currentIndex = 0;
@@ -29,22 +20,23 @@ class _PhysiquePageState extends State<PhysiquePage>
   late AnimationController _cardController;
   late Animation<double> _cardAnimation;
 
-  bool _soundEnabled = true;
-
   @override
   void initState() {
     super.initState();
-    questions = PhysiqueMecaniqueQuestions.getQuestionsByThemeAndDifficulty(
-      widget.theme,
-      widget.difficulty,
+
+    questions = CultureGeneraleQuestions.getQuestionsByTheme(
+      'Inventions & Découvertes',
     );
 
-    if (questions.isEmpty) {
-      questions = PhysiqueMecaniqueQuestions.getRandomQuestions(10);
+    if (questions.length < 15) {
+      questions = CultureGeneraleQuestions.getRandomQuestions(15);
+    } else {
+      // On prend les 15 premières questions
+      questions = questions.take(15).toList();
     }
 
     _progressController = AnimationController(
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     );
 
@@ -58,10 +50,6 @@ class _PhysiquePageState extends State<PhysiquePage>
     );
 
     _progressController.value = 0.0;
-    // _progressController.animateTo((currentIndex + 0) / questions.length);
-
-    AudioService().init(enabled: true, preload: false);
-    _soundEnabled = AudioService().isEnabled;
   }
 
   @override
@@ -69,13 +57,6 @@ class _PhysiquePageState extends State<PhysiquePage>
     _progressController.dispose();
     _cardController.dispose();
     super.dispose();
-  }
-
-  void _toggleSound() {
-    setState(() {
-      _soundEnabled = !_soundEnabled;
-      AudioService().setEnabled(_soundEnabled);
-    });
   }
 
   void _answerQuestion(int selectedIndex) {
@@ -86,10 +67,6 @@ class _PhysiquePageState extends State<PhysiquePage>
       selectedAnswer = selectedIndex;
       if (selectedIndex == questions[currentIndex].correctAnswerIndex) {
         score++;
-        AudioService()
-            .playSuccessShort(); // son court de succès via AudioService
-      } else {
-        AudioService().playFailShort(); // son court d'échec via AudioService
       }
     });
     final double progress = ((currentIndex + 1) / questions.length).clamp(
@@ -109,7 +86,6 @@ class _PhysiquePageState extends State<PhysiquePage>
         answered = false;
         selectedAnswer = null;
       });
-      // _progressController.animateTo((currentIndex + 1) / questions.length);
     } else {
       _progressController.animateTo(1.0);
       _showResult();
@@ -117,51 +93,16 @@ class _PhysiquePageState extends State<PhysiquePage>
   }
 
   void _showResult() {
-    AudioService().stopAll();
-
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder:
-            (context) => QuizResultPage(
+            (context) => QuizJourResultPage(
               score: score,
               totalQuestions: questions.length,
-              theme: widget.theme,
-              difficulty: widget.difficulty,
-              replayBuilder:
-                  (ctx) => PhysiquePage(
-                    theme: widget.theme,
-                    difficulty: widget.difficulty,
-                  ),
             ),
       ),
     );
-  }
-
-  Color _getDifficultyColor() {
-    switch (widget.difficulty) {
-      case 1:
-        return Colors.green;
-      case 2:
-        return Colors.orange;
-      case 3:
-        return Colors.red;
-      default:
-        return Colors.blue;
-    }
-  }
-
-  String _getDifficultyText() {
-    switch (widget.difficulty) {
-      case 1:
-        return 'Facile ⭐';
-      case 2:
-        return 'Moyen ⭐⭐';
-      case 3:
-        return 'Difficile ⭐⭐⭐';
-      default:
-        return 'Niveau ${widget.difficulty}';
-    }
   }
 
   @override
@@ -169,59 +110,53 @@ class _PhysiquePageState extends State<PhysiquePage>
     if (questions.isEmpty) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Aucune question disponible'),
-          backgroundColor: Colors.deepPurple,
+          title: Text('Quiz du Jour'),
+          backgroundColor: Colors.amber,
           foregroundColor: Colors.white,
         ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            // children: [
-            //   Icon(Icons.quiz_outlined, size: 64, color: Colors.grey),
-            //   SizedBox(height: 16),
-            //   Text(
-            //     'Aucune question trouvée',
-            //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            //   ),
-            //   Text(
-            //     'pour ce thème et niveau de difficulté',
-            //     style: TextStyle(color: Colors.grey[600]),
-            //   ),
-            //   SizedBox(height: 20),
-            //   ElevatedButton(
-            //     onPressed: () {
-            //       _showInfoDialog();
-            //     },
-            //     child: Text('Retour'),
-            //   ),
-            // ],
+            children: [
+              Icon(Icons.quiz_outlined, size: 64, color: Colors.grey),
+              SizedBox(height: 16),
+              Text(
+                'Aucune question disponible',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Retour'),
+              ),
+            ],
           ),
         ),
       );
     }
 
     final question = questions[currentIndex];
-    final difficultyColor = _getDifficultyColor();
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: Text(
-          widget.theme,
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Quiz du Jour',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+            Text(
+              'Spécial Inventions',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+            ),
+          ],
         ),
-        backgroundColor: difficultyColor,
+        backgroundColor: Colors.amber,
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
-          IconButton(
-            onPressed: _toggleSound,
-            icon: Icon(
-              _soundEnabled ? Icons.volume_up : Icons.volume_off,
-              color: Colors.white,
-            ),
-            tooltip: _soundEnabled ? 'Désactiver le son' : 'Activer le son',
-          ),
           Container(
             margin: EdgeInsets.only(right: 16, top: 8, bottom: 8),
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -229,12 +164,18 @@ class _PhysiquePageState extends State<PhysiquePage>
               color: Colors.white.withOpacity(0.2),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Text(
-              '${currentIndex + 1}/${questions.length}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
+            child: Row(
+              children: [
+                Icon(Icons.star, size: 16),
+                SizedBox(width: 4),
+                Text(
+                  '${currentIndex + 1}/${questions.length}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -246,7 +187,7 @@ class _PhysiquePageState extends State<PhysiquePage>
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [difficultyColor, difficultyColor.withOpacity(0.8)],
+                colors: [Colors.amber, Colors.amber.shade300],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -259,13 +200,24 @@ class _PhysiquePageState extends State<PhysiquePage>
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          _getDifficultyText(),
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
-                            fontSize: 14,
-                          ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_today,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'Quiz du ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
                         ),
+                        SizedBox(height: 4),
                         Text(
                           'Score: $score/${questions.length}',
                           style: TextStyle(
@@ -283,7 +235,7 @@ class _PhysiquePageState extends State<PhysiquePage>
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
-                        Icons.quiz,
+                        Icons.emoji_events,
                         color: Colors.white,
                         size: 24,
                       ),
@@ -355,14 +307,14 @@ class _PhysiquePageState extends State<PhysiquePage>
                               Row(
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.all(06),
+                                    padding: EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: difficultyColor.withOpacity(0.1),
+                                      color: Colors.amber.withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Icon(
                                       Icons.help_outline,
-                                      color: difficultyColor,
+                                      color: Colors.amber,
                                       size: 20,
                                     ),
                                   ),
@@ -377,7 +329,7 @@ class _PhysiquePageState extends State<PhysiquePage>
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 12),
+                              SizedBox(height: 16),
                               Text(
                                 question.question,
                                 style: TextStyle(
@@ -394,7 +346,7 @@ class _PhysiquePageState extends State<PhysiquePage>
                     },
                   ),
 
-                  SizedBox(height: 16),
+                  SizedBox(height: 24),
 
                   // Options de réponse
                   ...List.generate(
@@ -445,7 +397,7 @@ class _PhysiquePageState extends State<PhysiquePage>
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: borderColor,
+                                  color: borderColor!,
                                   width:
                                       answered && (isCorrect || isSelected)
                                           ? 2
@@ -475,9 +427,7 @@ class _PhysiquePageState extends State<PhysiquePage>
                                                 color: Colors.white,
                                               )
                                               : Text(
-                                                String.fromCharCode(
-                                                  65 + index,
-                                                ), // A, B, C, D
+                                                String.fromCharCode(65 + index),
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -510,18 +460,18 @@ class _PhysiquePageState extends State<PhysiquePage>
                     },
                   ),
 
-                  SizedBox(height: 14),
+                  SizedBox(height: 24),
 
                   // Explication et bouton suivant
                   if (answered) ...[
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.05),
+                        color: Colors.amber.withOpacity(0.05),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: Colors.blue.withOpacity(0.2),
+                          color: Colors.amber.withOpacity(0.2),
                         ),
                       ),
                       child: Column(
@@ -531,21 +481,21 @@ class _PhysiquePageState extends State<PhysiquePage>
                             children: [
                               Icon(
                                 Icons.lightbulb_outline,
-                                color: Colors.blue,
+                                color: Colors.amber,
                                 size: 20,
                               ),
-                              SizedBox(width: 6),
+                              SizedBox(width: 8),
                               Text(
                                 'Explication',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.blue[800],
+                                  color: Colors.amber[800],
                                   fontSize: 16,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 8),
+                          SizedBox(height: 12),
                           Text(
                             question.explanation,
                             style: TextStyle(
@@ -558,14 +508,14 @@ class _PhysiquePageState extends State<PhysiquePage>
                       ),
                     ),
 
-                    SizedBox(height: 14),
+                    SizedBox(height: 24),
 
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: _nextQuestion,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: difficultyColor,
+                          backgroundColor: Colors.amber,
                           foregroundColor: Colors.white,
                           padding: EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
@@ -603,5 +553,298 @@ class _PhysiquePageState extends State<PhysiquePage>
         ],
       ),
     );
+  }
+}
+
+// Page des résultats du Quiz du Jour
+class QuizJourResultPage extends StatelessWidget {
+  final int score;
+  final int totalQuestions;
+
+  const QuizJourResultPage({
+    Key? key,
+    required this.score,
+    required this.totalQuestions,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double percentage = (score / totalQuestions) * 100;
+    String grade = _getGrade(percentage);
+    Color gradeColor = _getGradeColor(percentage);
+
+    return Scaffold(
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        title: Text('  Quiz du Jour - Résultats'),
+        backgroundColor: Colors.amber,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Badge du jour
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.amber.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Icon(
+                      Icons.star,
+                      size: 54,
+                      color: Colors.amber,
+                    ),
+                  ),
+
+                  SizedBox(height: 2),
+
+                  Text(
+                    'Quiz du Jour Terminé !',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[800],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+
+                  SizedBox(height: 8),
+
+                  Text(
+                    'Spécial Inventions',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+
+                  SizedBox(height: 22),
+
+                  // Résultat principal
+                  Container(
+                    padding: EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [gradeColor, gradeColor.withOpacity(0.8)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: gradeColor.withOpacity(0.3),
+                          spreadRadius: 2,
+                          blurRadius: 15,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          _getResultIcon(percentage),
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                        SizedBox(height: 12),
+                        Text(
+                          grade,
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          '$score/$totalQuestions',
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          '${percentage.toStringAsFixed(1)}% de réussite',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 24),
+
+                  // Statistiques
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 14,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildStat(
+                          'Bonnes réponses',
+                          '$score',
+                          Icons.check_circle,
+                          Colors.green,
+                        ),
+                        Container(
+                          width: 1,
+                          height: 26,
+                          color: Colors.grey[300],
+                        ),
+                        _buildStat(
+                          'Mauvaises',
+                          '${totalQuestions - score}',
+                          Icons.cancel,
+                          Colors.red,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Boutons d'action
+            Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.home),
+                        SizedBox(width: 8),
+                        Text(
+                          'Retour à l\'accueil',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QuizJourPage(),
+                        ),
+                      );
+                    },
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      side: BorderSide(color: Colors.amber),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.refresh, color: Colors.amber),
+                        SizedBox(width: 8),
+                        Text(
+                          'Recommencer',
+                          style: TextStyle(
+                            color: Colors.amber,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStat(String label, String value, IconData icon, Color color) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 24),
+        SizedBox(height: 8),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey[800],
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[600],
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _getGrade(double percentage) {
+    if (percentage >= 90) return 'Excellent !';
+    if (percentage >= 80) return 'Très bien !';
+    if (percentage >= 70) return 'Bien !';
+    if (percentage >= 60) return 'Assez bien';
+    if (percentage >= 50) return 'Passable';
+    return 'À améliorer';
+  }
+
+  Color _getGradeColor(double percentage) {
+    if (percentage >= 80) return Colors.green;
+    if (percentage >= 60) return Colors.orange;
+    return Colors.red;
+  }
+
+  IconData _getResultIcon(double percentage) {
+    if (percentage >= 90) return Icons.emoji_events;
+    if (percentage >= 80) return Icons.thumb_up;
+    if (percentage >= 60) return Icons.sentiment_satisfied;
+    return Icons.sentiment_dissatisfied;
   }
 }

@@ -88,10 +88,9 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
       selectedAnswer = selectedIndex;
       if (selectedIndex == questions[currentIndex].correctAnswerIndex) {
         score++;
-        AudioService()
-            .playSuccessShort(); // son court de succès via AudioService
+        AudioService().playSuccessShort();
       } else {
-        AudioService().playFailShort(); // son court d'échec via AudioService
+        AudioService().playFailShort();
       }
     });
 
@@ -119,7 +118,6 @@ class _ConnaissanceGeneralPageState extends State<ConnaissanceGeneralPage>
   }
 
   void _showResult() {
-    // Stopper les sons courts via le service avant navigation (sécuritaire)
     AudioService().stopAll();
 
     Navigator.pushReplacement(

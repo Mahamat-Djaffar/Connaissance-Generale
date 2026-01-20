@@ -25,7 +25,7 @@ class _SciencesPageState extends State<SciencesPage> {
           'Sciences',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: AppColor.primarySwatch[500],
+        backgroundColor: AppColor.primarySwatch,
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
@@ -48,7 +48,7 @@ class _SciencesPageState extends State<SciencesPage> {
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [AppColor.primaryColor, Color(0xFF496585)],
+                  colors: [AppColor.primaryColor, AppColor.primaryColor],
                   // colors: [Colors.deepPurple, Colors.deepPurple.shade300],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -64,7 +64,7 @@ class _SciencesPageState extends State<SciencesPage> {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    '150+ Questions',
+                    '180+ Questions',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -140,10 +140,10 @@ class _SciencesPageState extends State<SciencesPage> {
             SizedBox(height: 16),
 
             _buildRecommendedQuiz(
-              'Quiz Découverte',
+              'Quiz savoir scientifique',
               'Parfait pour commencer',
               '10 questions • 5 min',
-              Icons.explore,
+              Icons.lightbulb,
               Colors.blue,
             ),
 
@@ -153,14 +153,6 @@ class _SciencesPageState extends State<SciencesPage> {
               '15 questions • 8 min',
               Icons.today,
               Colors.purple,
-            ),
-
-            _buildRecommendedQuiz(
-              'Marathon Culture',
-              'Pour les experts',
-              '50 questions • 25 min',
-              Icons.fitness_center,
-              Colors.red,
             ),
           ],
         ),
@@ -240,7 +232,7 @@ class _SciencesPageState extends State<SciencesPage> {
       {
         'title': 'Informatique et Technologie',
         'subtitle': 'scientifiques et tout sur la Tech',
-        'questions': '45 questions',
+        'questions': '40 questions',
         'icon': Icons.laptop_chromebook,
         'color': Colors.pink,
         'page':
@@ -250,9 +242,9 @@ class _SciencesPageState extends State<SciencesPage> {
             ),
       },
       {
-        'title': 'Physque',
+        'title': 'Physique',
         'subtitle': 'La physique & mecanique',
-        'questions': '40 questions',
+        'questions': '30 questions',
         'icon': Icons.hub,
         'color': Colors.deepOrange,
         'page':
@@ -264,12 +256,12 @@ class _SciencesPageState extends State<SciencesPage> {
       {
         'title': 'Inventions & Découvertes',
         'subtitle': 'Les grandes innovations',
-        'questions': '35 questions',
+        'questions': '50 questions',
         'icon': Icons.science_outlined,
         'color': Colors.cyan,
         'page':
             () => InventionDecouvertPage(
-              theme: 'Invention & Decouverte',
+              theme: 'Inventions & Découvertes',
               difficulty: selectedLevel,
             ),
       },

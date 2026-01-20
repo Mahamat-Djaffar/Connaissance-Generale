@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:puzzle_app/module/home/presentation/pages/home/culture_generale/culture_genrale_screen.dart';
+import 'package:puzzle_app/module/home/presentation/pages/home/quiz_jour/quiz_jour.dart';
 import 'package:puzzle_app/module/home/presentation/pages/home/sciences/sciences_screen.dart';
 import 'package:puzzle_app/core/theme/app_color.dart';
 
@@ -54,7 +55,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [AppColor.primaryColor, Color(0xFF607894)],
+                  colors: [AppColor.primaryColor, AppColor.primaryColor],
                   // colors: [Colors.deepPurple, Colors.purple.shade300],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -269,6 +270,12 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => QuizJourPage(),
+                          ),
+                        );
                         // Navigation vers le quiz du jour
                       },
                       style: ElevatedButton.styleFrom(
